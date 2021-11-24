@@ -19,10 +19,8 @@ import com.deskconn.stepcountgooglefitapi.databinding.ActivityMainBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
-import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
 
 import java.util.concurrent.TimeUnit;
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
                         .build();
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED &&
+                != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -72,11 +70,9 @@ public class MainActivity extends AppCompatActivity {
                                     .build(),
                             dataPoint -> {
                                 steps = steps + dataPoint.getValue(Field.FIELD_STEPS).asInt();
-                                binding.textview.setText("" + steps);
+                                binding.textview.setText(String.valueOf(steps));
                                 Toast.makeText(MainActivity.this, "here is " + dataPoint.getValue(Field.FIELD_STEPS), Toast.LENGTH_SHORT).show();
-                            }).addOnSuccessListener(unused -> {
-                System.out.println("here success" + unused);
-            });
+                            }).addOnSuccessListener(unused -> System.out.println("here success" + unused));
 
         }
     }
@@ -130,12 +126,10 @@ public class MainActivity extends AppCompatActivity {
                                             : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
                             Log.i(TAG, "Total steps: " + total);
                             steps = total;
-                            binding.textview.setText(steps + "");
+                            binding.textview.setText(String.valueOf(steps));
                             Toast.makeText(this, "Total steps = " + total, Toast.LENGTH_SHORT).show();
                         })
                 .addOnFailureListener(
-                        e -> {
-                            Log.w(TAG, "There was a problem getting the step count.", e);
-                        });
+                        e -> Log.w(TAG, "There was a problem getting the step count.", e));
     }
 }
